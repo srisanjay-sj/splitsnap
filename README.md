@@ -4,7 +4,7 @@
 
 An AI chatbot that reads a bill or receipt from a photo or a text description, works out the total, and splits it between friends — then turns the whole conversation into a WhatsApp-ready summary.
 
-🔗 **Live app:** https://macrosnap-sri.streamlit.app
+🔗 **Live app:** https://splitsnap-sri.streamlit.app
 
 > The live demo runs on a free Gemini API quota. If it stops responding, the daily quota may be used up — try again later. The app may also go to sleep after inactivity; click "get this app back up" if so.
 
