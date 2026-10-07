@@ -9,7 +9,7 @@ from google.genai import types
 from prompts import SYSTEM_PROMPT, WELCOME_MESSAGE_TEMPLATE, SUMMARY_REQUEST_PROMPT
 from style import CSS
 
-st.set_page_config(page_title="MacroSnap", page_icon="🥗")
+st.set_page_config(page_title="SplitSnap", page_icon="🧾")
 st.markdown(CSS, unsafe_allow_html=True)
 
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
@@ -25,7 +25,7 @@ gemini_client = get_gemini_client()
 
 
 def render_message(message):
-    avatar = "🥗" if message["role"] == "assistant" else "🙂"
+    avatar = "🧾" if message["role"] == "assistant" else "🙂"
     with st.chat_message(message["role"], avatar=avatar):
         if message["kind"] == "text":
             st.write(message["content"])
@@ -68,12 +68,11 @@ def ask_gemini(parts):
 if "onboarded" not in st.session_state:
     st.markdown(
         '<div class="hero">'
-        '<span class="pill">AI meal scanner</span>'
-        '<h1>Snap your meal. <span class="accent">Know your macros</span>'
-        ' in seconds.</h1>'
-        '<p style="color:#9CA0B8 !important;">MacroSnap reads a photo or a description '
-        'of what you ate, estimates calories, protein, carbs and fat, and sends your '
-        'day\'s summary to WhatsApp.</p>'
+        '<span class="pill">AI bill splitter</span>'
+        '<h1>Snap your bill. <span class="accent">Split it</span> in seconds.</h1>'
+        '<p style="color:#9CA0B8 !important;">SplitSnap reads a photo or a '
+        'description of your bill, works out the total, and splits it between '
+        'friends, then sends the breakdown to WhatsApp.</p>'
         '</div>',
         unsafe_allow_html=True,
     )
@@ -83,9 +82,9 @@ if "onboarded" not in st.session_state:
         whatsapp_number = st.text_input(
             "WhatsApp number (with country code)",
             placeholder="+91XXXXXXXXXX",
-            help="This is the number MacroSnap will send your summary to.",
+            help="This is the number SplitSnap will send your summary to.",
         )
-        submitted = st.form_submit_button("Start tracking 🚀")
+        submitted = st.form_submit_button("Start splitting 🚀")
 
     if submitted:
         number = whatsapp_number.replace(" ", "")
@@ -110,19 +109,19 @@ header_col, button_col = st.columns([5, 2], vertical_alignment="center")
 
 with header_col:
     st.markdown(
-        '<h1 class="brand">Macro<span class="accent">Snap</span></h1>',
+        '<h1 class="brand">Split<span class="accent">Snap</span></h1>',
         unsafe_allow_html=True,
     )
 
 with button_col:
     send_disabled = len(st.session_state.messages) <= 1
     if st.button("📤 Send to WhatsApp", disabled=send_disabled, use_container_width=True):
-        with st.spinner("Summarizing your day..."):
+        with st.spinner("Summarizing your bills..."):
             summary, ok = ask_gemini([SUMMARY_REQUEST_PROMPT])
         if not ok:
             st.error(summary)
         else:
-            text = f"Hi {st.session_state.name}, here is your MacroSnap summary:\n\n{summary}"
+            text = f"Hi {st.session_state.name}, here is your SplitSnap summary:\n\n{summary}"
             number = st.session_state.whatsapp_number.lstrip("+")
             st.session_state.wa_link = (
                 f"https://wa.me/{number}?text={urllib.parse.quote(text[:1500])}"
@@ -145,7 +144,7 @@ else:
         render_message(message)
 
 user_input = st.chat_input(
-    "Ask a question, or attach a photo of your meal",
+    "Ask a question, or attach a photo of your bill",
     accept_file=True,
     file_type=["jpg", "jpeg", "png"],
 )
@@ -164,9 +163,9 @@ if user_input:
         add_message("user", "text", text)
         parts.append(text)
     elif photo is not None:
-        parts.append("What is this meal? Give me the calories and macros.")
+        parts.append("What is this bill? List the items and the total.")
 
-    with st.spinner("Crunching the numbers..."):
+    with st.spinner("Reading the bill..."):
         answer, _ = ask_gemini(parts)
     add_message("assistant", "text", answer)
     st.rerun()
