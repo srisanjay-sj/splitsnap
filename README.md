@@ -38,8 +38,8 @@ Photo or text of a bill → Streamlit → Gemini → split calculated → WhatsA
 ## Run locally
 
 ```bash
-git clone https://github.com/srisanjay-sj/macrosnap.git
-cd macrosnap
+git clone https://github.com/srisanjay-sj/splitsnap.git
+cd splitsnap
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
